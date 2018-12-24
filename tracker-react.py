@@ -13,7 +13,7 @@ async def get_members(channel):
 
 async def get_logs(channel):
     msg_list = []
-    async for msg in client.logs_from(channel, limit=10000):
+    async for msg in client.logs_from(channel, limit=1000000):
         msg_list.append(msg)
     
     print(len(msg_list))
@@ -25,6 +25,8 @@ async def getNameFromID(id, list):
             return member
 
 async def win(author, channel):
+    if not(author.id == '160157662204526602' or author.id== '424975538721914900'):
+        return "you are not DG. you are not authorized"
     member_list = await get_members(channel)
     member_dict = {}
     for member in member_list:
@@ -33,10 +35,14 @@ async def win(author, channel):
     msg_list = await get_logs(channel)
     count = 0;
     for m in msg_list:
-         if(not m.author.bot):
+         if (not m.author.bot):
              for react in m.reactions:
                  if(react.emoji == "🇼"):
-                    member_dict[m.author.id] = member_dict[m.author.id]+react.count
+                    if (m.author.id in member_dict):
+                        member_dict[m.author.id] = member_dict[m.author.id] + react.count
+                    else:
+                        member_dict[m.author.id] = react.count
+                        
     
     mem_count = 1
     s = "These are the top 5 users with W reacts on #" + str(channel) + '\n'
@@ -44,13 +50,45 @@ async def win(author, channel):
         name = await getNameFromID(key, member_list)
         s = s + str(mem_count) + ". " + str(name) + " : " + str(value) + '\n'
         mem_count = mem_count+1
-        if (mem_count>=5):
+        if (mem_count>=11):
             break
     
     return s
 
+async def joy(author, channel):
+    if not(author.id == '160157662204526602' or author.id== '424975538721914900'):
+        return "you are not DG. you are not authorized"
+    member_list = await get_members(channel)
+    member_dict = {}
+    for member in member_list:
+        member_dict[member.id] = 0
+    
+    msg_list = await get_logs(channel)
+    count = 0;
+    for m in msg_list:
+         if (not m.author.bot):
+             for react in m.reactions:
+                 if(react.emoji == "😂"):
+                    if (m.author.id in member_dict):
+                        member_dict[m.author.id] = member_dict[m.author.id] + react.count
+                    else:
+                        member_dict[m.author.id] = react.count
+                        
+    
+    mem_count = 1
+    s = "These are the top 5 users with joy reacts on #" + str(channel) + '\n'
+    for key, value in sorted(member_dict.items(), key=lambda kv: kv[1], reverse=True):
+        name = await getNameFromID(key, member_list)
+        s = s + str(mem_count) + ". " + str(name) + " : " + str(value) + '\n'
+        mem_count = mem_count+1
+        if (mem_count>=11):
+            break
+    
+    return s
 
 async def loss(author, channel):
+    if not(author.id == '160157662204526602' or author.id== '424975538721914900'):
+        return "you are not DG. you are not authorized"
     member_list = await get_members(channel)
     member_dict = {}
     for member in member_list:
@@ -61,8 +99,8 @@ async def loss(author, channel):
     for m in msg_list:
          if(not m.author.bot):
              for react in m.reactions:
-                 if(react.emoji == "L"):
-                    member_dict[m.author.id] = member_dict[m.author.id]+react.count
+                 if(react.emoji == "🇱"):
+                    member_dict[m.author.id] = member_dict[m.author.id] + react.count
     
     mem_count = 1
     s = "These are the top 5 users with L reacts.\n"
