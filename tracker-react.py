@@ -13,7 +13,7 @@ async def get_members(channel):
 
 async def get_logs(channel):
     msg_list = []
-    async for msg in client.logs_from(channel, limit=None):
+    async for msg in client.logs_from(channel, limit=10000):
         msg_list.append(msg)
     
     print(len(msg_list))
