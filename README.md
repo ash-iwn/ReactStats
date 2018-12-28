@@ -10,7 +10,7 @@ To run:
 3) Run tracker-react.py and the bot should be online
 
 Usage:
-!stats <<command>>
+!stats *command*
 
 valid commands include joy, win, loss, syringe and pens (disappointed)
 commands can be added by updating emoji_dict with the command name and relevent emoji
