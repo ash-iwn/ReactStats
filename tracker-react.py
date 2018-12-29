@@ -2,6 +2,13 @@
 import discord
 import json
 from collections import OrderedDict
+import firebase_admin
+from firebase_admin import credentials
+
+cred = credentials.Certificate('path/to/serviceAccountKey.json')
+default_app = firebase_admin.initialize_app(cred)
+default_app = firebase_admin.initialize_app()
+
 
 TOKEN = '' #insert bot token here
 
@@ -87,6 +94,7 @@ async def on_message(message):
             msg = await get_leaders(emoji_dict[val], member_dict, message.channel, member_list)
         
             if not(msg is None):
+                print("SUCCESS")
                 await client.send_message(message.channel, msg)
             
 @client.event
