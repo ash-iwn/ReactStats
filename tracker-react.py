@@ -89,8 +89,8 @@ async def on_message(message):
                     "100" : "💯",
                     "ok" : "👌",
                     "cookie" : "🍪",
-                    "wang" : "🍆",
-                    "cheeks" : "🍑"
+                    "eggplant" : "🍆",
+                    "peach" : "🍑"
                 }
 
                 if(val in emoji_dict.keys()):
