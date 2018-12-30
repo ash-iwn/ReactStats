@@ -27,7 +27,7 @@ async def count_reacts(emoji, msg_list):
     for m in msg_list:
          if (not m.author.bot):
              for react in m.reactions:
-                 if(react.emoji == emoji):
+                if(react.emoji == emoji):
                     if (m.author.id in new_dict.keys()):
                         new_dict[m.author.id]["count"] = new_dict[m.author.id]["count"] + react.count
                     else:
@@ -43,7 +43,6 @@ async def get_leaders(emoji, member_dict, channel, member_list):
     s = "These are the top 10 users with " + emoji + " reacts on #" + str(channel) + '\n'
 
     sorted_d = sorted(member_dict.keys(), key = lambda x:(member_dict[x]['count']), reverse=True)
-    print(sorted_d)
     for key in sorted_d:
         s = s + str(mem_count) + ". " + str(member_dict[key]["member"]) + " : " + str(member_dict[key]["count"]) + '\n'
         mem_count = mem_count + 1
@@ -89,7 +88,9 @@ async def on_message(message):
                     "joy" : "😂",
                     "100" : "💯",
                     "ok" : "👌",
-                    "cookie" : "🍪"
+                    "cookie" : "🍪",
+                    "wang" : "🍆",
+                    "cheeks" : "🍑"
                 }
 
                 if(val in emoji_dict.keys()):
@@ -97,7 +98,10 @@ async def on_message(message):
                     member_list = message.channel.server.members
                     msg_list = await get_logs(message.channel)
                     member_dict = await count_reacts(emoji_dict[val], msg_list)
-                    msg = await get_leaders(emoji_dict[val], member_dict, message.channel, member_list)
+                    if(len(member_dict.keys())):
+                        msg = await get_leaders(emoji_dict[val], member_dict, message.channel, member_list)
+                    else:
+                        msg = "No stats for that emoji found."
                 else:
                     msg = "Invalid Command. Try again."
             
