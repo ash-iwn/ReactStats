@@ -2,12 +2,12 @@
 import discord
 import json
 from collections import OrderedDict
-import firebase_admin
-from firebase_admin import credentials
+# import firebase_admin
+# from firebase_admin import credentials
 
-cred = credentials.Certificate('path/to/serviceAccountKey.json')
-default_app = firebase_admin.initialize_app(cred)
-default_app = firebase_admin.initialize_app()
+# cred = credentials.Certificate('path/to/serviceAccountKey.json')
+# default_app = firebase_admin.initialize_app(cred)
+# default_app = firebase_admin.initialize_app()
 
 
 TOKEN = '' #insert bot token here
@@ -41,8 +41,11 @@ async def count_reacts(emoji, msg_list):
 async def get_leaders(emoji, member_dict, channel, member_list):
     mem_count = 1
     s = "These are the top 10 users with " + emoji + " reacts on #" + str(channel) + '\n'
-    for key, value in sorted(member_dict.items(), key=lambda kv: kv[1], reverse=True):
-        s = s + str(mem_count) + ". " + str(value["member"]) + " : " + str(value["count"]) + '\n'
+
+    sorted_d = sorted(member_dict.keys(), key = lambda x:(member_dict[x]['count']), reverse=True)
+    print(sorted_d)
+    for key in sorted_d:
+        s = s + str(mem_count) + ". " + str(member_dict[key]["member"]) + " : " + str(member_dict[key]["count"]) + '\n'
         mem_count = mem_count + 1
         if (mem_count>=11):
             break
@@ -55,12 +58,11 @@ async def hello(author):
 async def help(author): # Modify based on commands added
 
     return """
-    This bot helps track the top 10 users with specific emoji reacts on their posts
-    in this channel.
+    This bot helps track the top 10 users with specific emoji reacts on their posts in this channel.
 
     Usage - !stats <command>
 
-    valid commands - win, loss, joy, syringe, pens(disappointed), help, hello
+    valid commands - win, loss, joy, syringe, pensive, 100, ok, help, hello
     """
 
 @client.event
@@ -70,32 +72,38 @@ async def on_message(message):
         return
     if (message.content.startswith('!stats ')):
         val = message.content[7:] #get command name from message
-        print("calling ", val)
+        
 
         if not(message.author.id == '160157662204526602' or message.author.id== '424975538721914900' or val == 'hello' or val == 'help'):
-            return "You Are Not Authorized To Use This Command. Pay $100 to Fcord to continue."
+           msg = "You Are Not Authorized To Use This Command. Pay $100 to Fcord to continue."
         
-        if(val == 'help' or val =='hello'):
-            await client.send_message(message.channel, await globals()[val](message.author))  
         else:
-            member_list= message.channel.server.members
-            msg_list = await get_logs(message.channel)
+            if(val == 'help' or val =='hello'):
+                msg = await globals()[val](message.author)  
+            else:
+                emoji_dict = {
+                    "win" : "🇼",
+                    "loss" : "🇱",
+                    "syringe" : "💉" ,
+                    "pensive" : "😔",
+                    "joy" : "😂",
+                    "100" : "💯",
+                    "ok" : "👌",
+                    "cookie" : "🍪"
+                }
+
+                if(val in emoji_dict.keys()):
+                    print("calling ", val)
+                    member_list = message.channel.server.members
+                    msg_list = await get_logs(message.channel)
+                    member_dict = await count_reacts(emoji_dict[val], msg_list)
+                    msg = await get_leaders(emoji_dict[val], member_dict, message.channel, member_list)
+                else:
+                    msg = "Invalid Command. Try again."
             
-            emoji_dict = {
-                "win" : "🇼",
-                "loss" : "🇱",
-                "syringe" : "💉" ,
-                "pens" : "😞",
-                "joy" : "😂"
-            }
-
-            member_dict = await count_reacts(emoji_dict[val], msg_list)
-
-            msg = await get_leaders(emoji_dict[val], member_dict, message.channel, member_list)
-        
-            if not(msg is None):
-                print("SUCCESS")
-                await client.send_message(message.channel, msg)
+        if not(msg is None):
+            print("SUCCESS")
+            await client.send_message(message.channel, msg)
             
 @client.event
 async def on_ready():
