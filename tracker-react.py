@@ -19,7 +19,7 @@ async def get_logs(channel):
     async for msg in client.logs_from(channel, limit=1000000):
         msg_list.append(msg)
     
-    print(len(msg_list), " messages read")
+    print( "Read " + str(len(msg_list)) + " messages")
     return msg_list
 
 async def count_reacts(emoji, msg_list):
