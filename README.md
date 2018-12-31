@@ -1,5 +1,5 @@
 # ReactStats
-A Discord Bot that gives a User Leaderboard based on who has earned the most of any type of react on their posts in a channel. 
+A Discord Bot that gives a User Leaderboard for a channel, based on who has earned the most of any type of react on their posts. 
 
 Requires python >= 3.5.4 and the discord.py library
 
