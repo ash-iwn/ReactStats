@@ -16,7 +16,7 @@ client = discord.Client()
 
 async def get_logs(channel):
     msg_list = []
-    async for msg in client.logs_from(channel, limit=1000000):
+    async for msg in client.logs_from(channel, limit=10000000):
         msg_list.append(msg)
     
     print( "Read " + str(len(msg_list)) + " messages")
@@ -59,7 +59,7 @@ async def help(author): # Modify based on commands added
     return """
     This bot helps track the top 10 users with specific emoji reacts on their posts in this channel.
 
-    Usage - !stats <command>
+    Usage - !stats <command>,<command2>,<command3>,...
 
     valid commands - win, loss, joy, syringe, pensive, 100, ok, help, hello
     """
@@ -80,6 +80,10 @@ async def on_message(message):
             if(val == 'help' or val =='hello'):
                 msg = await globals()[val](message.author)  
             else:
+                try:
+                    val_list = val.split(",")
+                except: 
+                    return "Bad Command. Try again"
                 emoji_dict = {
                     "win" : "🇼",
                     "loss" : "🇱",
@@ -92,18 +96,18 @@ async def on_message(message):
                     "eggplant" : "🍆",
                     "peach" : "🍑"
                 }
-
-                if(val in emoji_dict.keys()):
-                    print("calling ", val)
-                    member_list = message.channel.server.members
-                    msg_list = await get_logs(message.channel)
-                    member_dict = await count_reacts(emoji_dict[val], msg_list)
-                    if(len(member_dict.keys())):
-                        msg = await get_leaders(emoji_dict[val], member_dict, message.channel, member_list)
+                msg_list = await get_logs(message.channel)
+                member_list = message.channel.server.members
+                for item in val_list:
+                    if(item in emoji_dict.keys()):
+                        print("calling ", item)
+                        member_dict = await count_reacts(emoji_dict[item], msg_list)
+                        if(len(member_dict.keys())):
+                            msg = await get_leaders(emoji_dict[item], member_dict, message.channel, member_list)
+                        else:
+                            msg = "No stats for " + item + " emoji found."
                     else:
-                        msg = "No stats for that emoji found."
-                else:
-                    msg = "Invalid Command. Try again."
+                        msg = "Invalid Command " + item ". Try again."
             
         if not(msg is None):
             print("SUCCESS")
