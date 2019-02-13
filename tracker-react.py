@@ -30,7 +30,7 @@ async def count_reacts(emoji, msg_list):
                 if(react.emoji == emoji):
                     if (m.author.id in new_dict.keys()):
                         if(react.count>0 and (react.emoji=='😂' or  react.emoji=='💯' or react.emoji=='w' or react.emoji=='💉')):
-                            new_dict[m.author.id]["count"] = new_dict[m.author.id]["count"] + (react.count - 1)
+                           new_dict[m.author.id]["count"] = new_dict[m.author.id]["count"] + (react.count - 1)
                         else:
                             new_dict[m.author.id]["count"] = new_dict[m.author.id]["count"] + react.count
                     else:
@@ -76,17 +76,19 @@ async def on_message(message):
         val = message.content[7:] #get command name from message
         
 
-        if not(message.author.id == '160157662204526602' or message.author.id== '424975538721914900' or val == 'hello' or val == 'help'):
-           msg = "You Are Not Authorized To Use This Command. Pay $100 to Fcord to continue."
+        if not(message.author.id == '160157662204526602' or message.author.id== '497827364290691094' or val == 'hello' or val == 'help'):
+            if(message.author.id == '469099245174259712'):
+                msg = "You do not meet the weight requirements to use this bot."
+            else: 
+                msg = "You Are Not Authorized To Use This Command."
+        
         
         else:
+            
             if(val == 'help' or val =='hello'):
                 msg = await globals()[val](message.author)  
             else:
-                try:
-                    val_list = val.split(",")
-                except: 
-                    return "Bad Command. Try again"
+                flag = 0
                 emoji_dict = {
                     "win" : "🇼",
                     "loss" : "🇱",
@@ -99,18 +101,29 @@ async def on_message(message):
                     "eggplant" : "🍆",
                     "peach" : "🍑"
                 }
-                msg_list = await get_logs(message.channel)
-                member_list = message.channel.server.members
+
+                try:
+                    val_list = val.split(",")
+                except: 
+                    flag = 1
+               
                 for item in val_list:
-                    if(item in emoji_dict.keys()):
+                    if not(item in emoji_dict.keys()):
+                        flag = 1
+
+                if (flag == 0):
+                    msg_list = await get_logs(message.channel)
+                    member_list = message.channel.server.members
+                    for item in val_list:
                         print("calling ", item)
                         member_dict = await count_reacts(emoji_dict[item], msg_list)
                         if(len(member_dict.keys())):
                             msg = await get_leaders(emoji_dict[item], member_dict, message.channel, member_list)
                         else:
                             msg = "No stats for " + item + " emoji found."
-                    else:
-                        msg = "Invalid command " + str(item) 
+                else:
+                    msg = "Invalid Command List. Try again."
+                        
             
         if not(msg is None):
             print("SUCCESS")
