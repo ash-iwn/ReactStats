@@ -29,7 +29,10 @@ async def count_reacts(emoji, msg_list):
              for react in m.reactions:
                 if(react.emoji == emoji):
                     if (m.author.id in new_dict.keys()):
-                        new_dict[m.author.id]["count"] = new_dict[m.author.id]["count"] + react.count
+                        if(react.count>0 and (react.emoji=='😂' or  react.emoji=='💯' or react.emoji=='w' or react.emoji=='💉')):
+                            new_dict[m.author.id]["count"] = new_dict[m.author.id]["count"] + (react.count - 1)
+                        else:
+                            new_dict[m.author.id]["count"] = new_dict[m.author.id]["count"] + react.count
                     else:
                         new_dict[m.author.id] = { 
                             "member" : m.author,
@@ -107,7 +110,7 @@ async def on_message(message):
                         else:
                             msg = "No stats for " + item + " emoji found."
                     else:
-                        msg = "Invalid Command " + item ". Try again."
+                        msg = "Invalid command " + str(item) 
             
         if not(msg is None):
             print("SUCCESS")
