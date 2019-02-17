@@ -29,7 +29,7 @@ async def count_reacts(emoji, msg_list):
              for react in m.reactions:
                 if(react.emoji == emoji):
                     if (m.author.id in new_dict.keys()):
-                        if(react.count>0 and (react.emoji=='😂' or  react.emoji=='💯' or react.emoji=='w' or react.emoji=='💉')):
+                        if(react.count>0 and (react.emoji=='😂' or react.emoji=='✍' or react.emoji=='💯' or react.emoji=='w' or react.emoji=='💉')):
                            new_dict[m.author.id]["count"] = new_dict[m.author.id]["count"] + (react.count - 1)
                         else:
                             new_dict[m.author.id]["count"] = new_dict[m.author.id]["count"] + react.count
@@ -51,7 +51,7 @@ async def get_leaders(emoji, member_dict, channel, member_list):
         mem_count = mem_count + 1
         if (mem_count>=11):
             break
-    
+    s = s + "============================================ \n"
     return s
 
 async def hello(author):
@@ -99,7 +99,10 @@ async def on_message(message):
                     "ok" : "👌",
                     "cookie" : "🍪",
                     "eggplant" : "🍆",
-                    "peach" : "🍑"
+                    "peach" : "🍑",
+                    "write": "✍",
+                    "wine": "🍷"
+
                 }
 
                 try:
@@ -114,13 +117,14 @@ async def on_message(message):
                 if (flag == 0):
                     msg_list = await get_logs(message.channel)
                     member_list = message.channel.server.members
+                    msg = ""
                     for item in val_list:
                         print("calling ", item)
                         member_dict = await count_reacts(emoji_dict[item], msg_list)
                         if(len(member_dict.keys())):
-                            msg = await get_leaders(emoji_dict[item], member_dict, message.channel, member_list)
+                            msg = msg + await get_leaders(emoji_dict[item], member_dict, message.channel, member_list)
                         else:
-                            msg = "No stats for " + item + " emoji found."
+                            msg = msg + "No stats for " + str(item) + " emoji found. \n"
                 else:
                     msg = "Invalid Command List. Try again."
                         
