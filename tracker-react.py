@@ -2,12 +2,6 @@
 import discord
 import json
 from collections import OrderedDict
-# import firebase_admin
-# from firebase_admin import credentials
-
-# cred = credentials.Certificate('path/to/serviceAccountKey.json')
-# default_app = firebase_admin.initialize_app(cred)
-# default_app = firebase_admin.initialize_app()
 
 
 TOKEN = '' #insert bot token here
@@ -29,7 +23,7 @@ async def count_reacts(emoji, msg_list):
              for react in m.reactions:
                 if(react.emoji == emoji):
                     if (m.author.id in new_dict.keys()):
-                        if(react.count>0 and (react.emoji=='😂' or react.emoji=='✍' or react.emoji=='💯' or react.emoji=='w' or react.emoji=='💉')):
+                        if(react.count>0 and (emoji=='😂' or emoji == '😭' or emoji=='✍' or emoji=='💯' or emoji=='w' or emoji=='💉')):
                            new_dict[m.author.id]["count"] = new_dict[m.author.id]["count"] + (react.count - 1)
                         else:
                             new_dict[m.author.id]["count"] = new_dict[m.author.id]["count"] + react.count
@@ -38,7 +32,6 @@ async def count_reacts(emoji, msg_list):
                             "member" : m.author,
                             "count" : react.count
                         }
-
     return new_dict
 
 async def get_leaders(emoji, member_dict, channel, member_list):
@@ -77,10 +70,7 @@ async def on_message(message):
         
 
         if not(message.author.id == '160157662204526602' or message.author.id== '497827364290691094' or val == 'hello' or val == 'help'):
-            if(message.author.id == '469099245174259712'):
-                msg = "You do not meet the weight requirements to use this bot."
-            else: 
-                msg = "You Are Not Authorized To Use This Command."
+            msg = "You do not meet the weight requirements to use this bot."
         
         
         else:
@@ -101,7 +91,8 @@ async def on_message(message):
                     "eggplant" : "🍆",
                     "peach" : "🍑",
                     "write": "✍",
-                    "wine": "🍷"
+                    "wine": "🍷",
+                    "sob" : "😭"
 
                 }
 
