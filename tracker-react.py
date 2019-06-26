@@ -1,3 +1,6 @@
+# Bot to track reactions in a discord server 
+# Counts only reacts in the channel it is triggered in
+# Displays a user leaderboard of top 10 users to receive that reaction
 # Works with Python 3.5.4
 import discord
 import json
