@@ -7,11 +7,12 @@ import json
 from collections import OrderedDict
 
 
-TOKEN = '' #insert bot token here
+TOKEN = 'NTI3NjU4MDM5NzAxMTQzNTY5.D0XaqA.-BAbo3Gz401Cl10FcM455GUuIck' #insert bot token here
 
 client = discord.Client()
 
 async def get_logs(channel):
+    print("Getting logs from "+ channel)
     msg_list = []
     async for msg in client.logs_from(channel, limit=10000000):
         msg_list.append(msg)
@@ -47,7 +48,7 @@ async def get_leaders(emoji, member_dict, channel, member_list):
         mem_count = mem_count + 1
         if (mem_count>=11):
             break
-    s = s + "============================================ \n"
+    s = s + "========================================== \n"
     return s
 
 async def hello(author):
@@ -72,7 +73,7 @@ async def on_message(message):
         val = message.content[7:] #get command name from message
         
 
-        if not(message.author.id == '160157662204526602' or message.author.id== '497827364290691094' or val == 'hello' or val == 'help'):
+        if not(message.author.id == '160157662204526602' or message.author.id== '424975538721914900' or val == 'hello' or val == 'help'):
             msg = "You do not meet the weight requirements to use this bot."
         
         
@@ -90,13 +91,11 @@ async def on_message(message):
                     "joy" : "😂",
                     "100" : "💯",
                     "ok" : "👌",
-                    "cookie" : "🍪",
                     "eggplant" : "🍆",
                     "peach" : "🍑",
                     "write": "✍",
-                    "wine": "🍷",
-                    "sob" : "😭"
-
+                    "sob" : "😭",
+                    "tomato" : "🍅"
                 }
 
                 try:
@@ -109,14 +108,15 @@ async def on_message(message):
                         flag = 1
 
                 if (flag == 0):
-                    msg_list = await get_logs(message.channel)
                     member_list = message.channel.server.members
                     msg = ""
+                    channel = client.get_channel("585260614683983872")
+                    msg_list = await get_logs(channel) #replace with channel you want to track 
                     for item in val_list:
                         print("calling ", item)
                         member_dict = await count_reacts(emoji_dict[item], msg_list)
                         if(len(member_dict.keys())):
-                            msg = msg + await get_leaders(emoji_dict[item], member_dict, message.channel, member_list)
+                            msg = msg + await get_leaders(emoji_dict[item], member_dict, channel, member_list)
                         else:
                             msg = msg + "No stats for " + str(item) + " emoji found. \n"
                 else:
