@@ -7,7 +7,7 @@ import json
 from collections import OrderedDict
 
 
-TOKEN = 'NTI3NjU4MDM5NzAxMTQzNTY5.D0XaqA.-BAbo3Gz401Cl10FcM455GUuIck' #insert bot token here
+TOKEN = '' #insert bot token here
 
 client = discord.Client()
 
